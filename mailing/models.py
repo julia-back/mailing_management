@@ -54,9 +54,9 @@ class Mailing(models.Model):
     name = models.CharField(max_length=100,
                             verbose_name="Название рассылки",
                             help_text="Введите название рассылки для удобного поиска")
-    start_send = models.DateTimeField(default=None)
-    stop_send = models.DateTimeField(default=None)
-    status = models.CharField(max_length=20, choices=STATUS_MAILING_CHOICES, default="created",
+    start_send = models.DateTimeField(default=None, null=True, blank=True)
+    stop_send = models.DateTimeField(default=None, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_MAILING_CHOICES, default="Создана",
                               verbose_name="Статус рассылки")
     message = models.ForeignKey(Message, on_delete=models.SET_NULL, null=True,
                                 related_name="messages")

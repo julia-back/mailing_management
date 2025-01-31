@@ -1,0 +1,66 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Детали рассылки{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col m-2">
+        <h1>Детали рассылки</h1>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Название рассылки:</td>
+                <td>{{ object.name }}</td>
+            </tr>
+            <tr>
+                <td>Статус рассылки:</td>
+                <td>{{ object.status }}</td>
+            </tr>
+            <tr>
+                <td>Сообщение:</td>
+                <td>{{ object.message }}</td>
+            </tr>
+            <tr>
+                <td>Получатель:</td>
+                <td>{{ object.recipient }}</td>
+            </tr>
+            <tr>
+                <td>Начало рассылки:</td>
+                {% if object.start_send %}
+                <td>{{ object.start_send }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Конец рассылки:</td>
+                {% if object.stop_send %}
+                <td>{{ object.stop_send }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div class="row">
+    <div class="col-6"></div>
+    <div class="col-2">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a href="{% url 'mailing:mailing_update' object.pk %}" class="btn btn-secondary" type="button">Редактировать</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a href="{% url 'mailing:mailing_delete' object.pk %}" class="btn btn-danger" type="button">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

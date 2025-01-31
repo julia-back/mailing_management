@@ -1,0 +1,39 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Рассылки{% endblock %}
+
+{% block content %}
+<h1>Рассылки</h1>
+<div class="row">
+    <div class="col">
+        <a href="{% url 'mailing:mailing_create' %}" class="link-dark link-offset-2 link-underline-opacity-25
+         link-underline-opacity-100-hover p-1">Добавить рассылку</a>
+        <table class="table">
+            <tbody>
+            {% for mailing in object_list %}
+            <tr>
+                <th scope="row">{{ mailing.pk }}</th>
+                <td>{{ mailing.name }}</td>
+                <td>{{ mailing.status }}</td>
+                <td>{{ mailing.message }}</td>
+                <td>{{ mailing.recipient }}</td>
+                {% if mailing.start_send %}
+                <td>{{ mailing.start_send }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+                {% if mailing.stop_send %}
+                <td>{{ mailing.stop_send }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+                <td>
+                    <a href="{% url 'mailing:mailing_detail' mailing.pk %}" class="btn btn-light">Посмотреть</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
