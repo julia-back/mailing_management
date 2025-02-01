@@ -76,7 +76,7 @@ class SendingAttempt(models.Model):
     STATUS_ATTEMPT_CHOICES = {"success": "Успешно",
                               "fail": "Не успешно"}
 
-    date = models.DateTimeField(default=None)
+    date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_ATTEMPT_CHOICES)
     mail_server_response = models.TextField(null=True, blank=True)
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)

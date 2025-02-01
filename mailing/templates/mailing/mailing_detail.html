@@ -47,7 +47,13 @@
     <div class="col-2"></div>
 </div>
 <div class="row">
-    <div class="col-6"></div>
+    <div class="col-2"></div>
+    <div class="col-4">
+        <div class="d-grid gap-2">
+            <a href="{% url 'mailing:mailing_start' object.pk %}" class="btn btn-primary"
+               type="button">Начать рассылку</a>
+        </div>
+    </div>
     <div class="col-2">
         <div class="col">
             <div class="d-grid gap-2">

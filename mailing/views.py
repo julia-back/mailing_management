@@ -1,7 +1,9 @@
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import Recipient, Message, Mailing
 from django.urls import reverse_lazy
 from .forms import RecipientForm, MessageForm, MailingForm
+from .services import start_send_mailing
 
 
 class HomeView(TemplateView):
@@ -84,3 +86,13 @@ class MailingDeleteView(DeleteView):
     model = Mailing
     success_url = reverse_lazy("mailing:mailing_list")
     template_name = "mailing/confirm_delete.html"
+
+
+class MailingStartView(View):
+
+    def get(self, request, pk):
+        return render(request, "mailing/mailing_start.html")
+
+    def post(self, request, pk):
+        start_send_mailing(pk=pk)
+        return redirect("mailing:mailing_list")
