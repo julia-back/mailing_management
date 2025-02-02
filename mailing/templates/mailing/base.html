@@ -11,19 +11,38 @@
     <div class="col">
         <nav class="navbar sticky-top bg-body-tertiary">
             <div class="container-fluid">
+
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+                        data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01"
+                        aria-expanded="false"
                         aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'users:logout' %}"
+                              style="display: inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                        </form>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
+                    <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+                    {% endif %}
+                </div>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                     <a class="navbar-brand" href="{% url 'mailing:home' %}">Главная</a>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:mailing_list' %}">Рассылки</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:message_list' %}">Сообщения</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:recipient_list' %}">Получатели</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:sending_attempt_list' %}">Попытки расылок</a></li>
-
+                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:mailing_list' %}">Рассылки</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:message_list' %}">Сообщения</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="{% url 'mailing:recipient_list' %}">Получатели</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="{% url 'mailing:sending_attempt_list' %}">Попытки
+                            расылок</a></li>
                     </ul>
                 </div>
             </div>
