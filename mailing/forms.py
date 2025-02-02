@@ -18,3 +18,9 @@ class MailingForm(ModelForm):
     class Meta:
         model = Mailing
         fields = ["name", "message", "recipient"]
+
+
+class MailingModeratorForm(ModelForm):
+    class Meta:
+        model = Mailing
+        fields = ["status"]

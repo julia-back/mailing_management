@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import Recipient, Message, Mailing, SendingAttempt
 from django.urls import reverse_lazy
-from .forms import RecipientForm, MessageForm, MailingForm
+from .forms import RecipientForm, MessageForm, MailingForm, MailingModeratorForm
 from .services import start_send_mailing
 
 
@@ -138,6 +138,12 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     success_url = reverse_lazy("mailing:mailing_list")
     form_class = MailingForm
+
+    def get_form_class(self):
+        if self.request.user == self.object.owner:
+            return MailingForm
+        elif self.request.user.has_perm("can_stop_mailing"):
+            return MailingModeratorForm
 
 
 class MailingDeleteView(LoginRequiredMixin, DeleteView):

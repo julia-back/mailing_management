@@ -73,6 +73,7 @@ class Mailing(models.Model):
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         ordering = ["name"]
+        permissions = [("can_stop_mailing", "Can stop mailing")]
 
 
 class SendingAttempt(models.Model):
