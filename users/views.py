@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, TemplateView
 from .forms import RegisterForm, CustomUserModeratorForm, CustomUserForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -25,3 +25,19 @@ class CustomUserUpdateView(LoginRequiredMixin, UpdateView):
             return CustomUserForm
         elif self.request.user.has_perm("can_block_user"):
             return CustomUserModeratorForm
+
+
+class ProfileView(TemplateView):
+
+    template_name = "users/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = CustomUser.username
+        context["first_name"] = CustomUser.first_name
+        context["last_name"] = CustomUser.last_name
+        context["email"] = CustomUser.email
+        context["phone_number"] = CustomUser.phone_number
+        context["country"] = CustomUser.country
+        context["avatar"] = CustomUser.avatar
+        return context

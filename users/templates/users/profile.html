@@ -1,0 +1,37 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}профиль{% endblock %}
+
+{% block content %}
+<h1>Профиль</h1>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>{{ username }}</td>
+            </tr>
+            <tr>
+                <td>{{ first_name }}</td>
+            </tr>
+            <tr>
+                <td>{{ last_name }}</td>
+            </tr>
+            <tr>
+                <td>{{ email }}</td>
+            </tr>
+            <tr>
+                <td>{{ phone_number }}</td>
+            </tr>
+            <tr>
+                <td>{{ country }}</td>
+            </tr>
+            <tr>
+                <td>{{ avatar }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="{% url 'users:user_update' user.pk %}" class="btn btn-light">Изменить</a>
+    </div>
+</div>
+{% endblock %}
