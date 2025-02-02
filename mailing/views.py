@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
-from .models import Recipient, Message, Mailing
+from .models import Recipient, Message, Mailing, SendingAttempt
 from django.urls import reverse_lazy
 from .forms import RecipientForm, MessageForm, MailingForm
 from .services import start_send_mailing
@@ -8,6 +8,22 @@ from .services import start_send_mailing
 
 class HomeView(TemplateView):
     template_name = "mailing/home.html"
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context["success_attempt"] = SendingAttempt.objects.filter(status="success").count()
+        context["fail_attempt"] = SendingAttempt.objects.filter(status="fail").count()
+        context["all_attempt"] = SendingAttempt.objects.count()
+
+        context["all_mailing"] = Mailing.objects.count()
+        context["processing_mailing"] = Mailing.objects.filter(status="processing").count()
+        context["all_recipient"] = Recipient.objects.values("email").distinct().count()
+
+        return self.render_to_response(context)
+
+
+class SendingAttemptListView(ListView):
+    model = SendingAttempt
 
 
 class RecipientListView(ListView):

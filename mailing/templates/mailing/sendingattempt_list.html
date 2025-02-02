@@ -1,0 +1,35 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Попытки рассылки{% endblock %}
+
+{% block content %}
+<h1>Попытки рассылки</h1>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Статус</th>
+                <th scope="col">Сообщение об ошибке</th>
+                <th scope="col">Дата попытки</th>
+                <th scope="col">Рассылка</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sending_attempt in object_list %}
+            <tr>
+                <td>{{ sending_attempt.status }}</td>
+                {% if sending_attempt.mail_server_response %}
+                <td>{{ sending_attempt.mail_server_response }}</td>
+                {% else %}
+                <td> - </td>
+                {% endif %}
+                <td>{{ sending_attempt.date }}</td>
+                <td>{{ sending_attempt.mailing.name }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

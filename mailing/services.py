@@ -28,5 +28,5 @@ def start_send_mailing(pk):
         sending_attempt_success = SendingAttempt(status="success", mail_server_response=None, mailing=mailing)
         sending_attempt_success.save()
 
-    mailing.status = mailing.STATUS_MAILING_CHOICES.get("processing")
+    mailing.status = "processing"
     mailing.save()

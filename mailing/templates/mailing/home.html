@@ -3,6 +3,52 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-<h1>Главная</h1>
-Бла бла бла
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col"><h1>Главная</h1></div>
+    <div class="col-2"></div>
+</div>
+
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th scope="row">{{ all_mailing }}</th>
+                <td>- количество всех рассылок</td>
+            </tr>
+            <tr>
+                <th scope="row">{{ processing_mailing }}</th>
+                <td>- количество активных рассылок</td>
+            </tr>
+            <tr>
+                <th scope="row">{{ all_recipient }}</th>
+                <td>- количество уникальных получателей</td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    <div class="col-4">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Успешные попытки рассылки
+                <span class="badge text-bg-success rounded-pill">{{ success_attempt }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Неудачные попытки рассылки
+                <span class="badge text-bg-danger rounded-pill">{{ fail_attempt }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Всего попыток рассылки
+                <span class="badge text-bg-secondary rounded-pill">{{ all_attempt }}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="col-2"></div>
+</div>
+
+
 {% endblock %}
