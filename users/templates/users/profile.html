@@ -5,33 +5,63 @@
 {% block content %}
 <h1>Профиль</h1>
 <div class="row">
+    <div class="col-2"></div>
     <div class="col">
         <table class="table">
             <tbody>
             <tr>
-                <td>{{ username }}</td>
+                <td>Имя пользователя</td>
+                <td>{{ object.username }}</td>
             </tr>
             <tr>
-                <td>{{ first_name }}</td>
+                <td>Имя</td>
+                {% if object.first_name %}
+                <td>{{ object.first_name }}</td>
+                {% else %}
+                <td> - </td>
+                {% endif %}
             </tr>
             <tr>
-                <td>{{ last_name }}</td>
+                <td>Фамилия</td>
+                {% if object.last_name %}
+                <td>{{ object.last_name }}</td>
+                {% else %}
+                <td> - </td>
+                {% endif %}
             </tr>
             <tr>
-                <td>{{ email }}</td>
+                <td>Email</td>
+                {% if object.email %}
+                <td>{{ object.email }}</td>
+                {% else %}
+                <td> - </td>
+                {% endif %}
             </tr>
             <tr>
-                <td>{{ phone_number }}</td>
+                <td>Номер телефона</td>
+                {% if object.phone_number %}
+                <td>{{ object.phone_number }}</td>
+                {% else %}
+                <td> - </td>
+                {% endif %}
             </tr>
             <tr>
-                <td>{{ country }}</td>
+                <td>Страна</td>
+                {% if object.country %}
+                <td>{{ object.country }}</td>
+                {% else %}
+                <td> - </td>
+                {% endif %}
             </tr>
             <tr>
-                <td>{{ avatar }}</td>
+                <td>Фото</td>
+                <td><img src="{{object.avatar.url | default:'[Photo]'}}" class="border rounded mx-auto d-block"
+                         style="max-width: 40%; height: 40%;"></td>
             </tr>
             </tbody>
         </table>
         <a href="{% url 'users:user_update' user.pk %}" class="btn btn-light">Изменить</a>
     </div>
+    <div class="col-2"></div>
 </div>
 {% endblock %}

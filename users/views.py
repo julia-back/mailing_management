@@ -33,11 +33,6 @@ class ProfileView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["username"] = CustomUser.username
-        context["first_name"] = CustomUser.first_name
-        context["last_name"] = CustomUser.last_name
-        context["email"] = CustomUser.email
-        context["phone_number"] = CustomUser.phone_number
-        context["country"] = CustomUser.country
-        context["avatar"] = CustomUser.avatar
+        pk = kwargs.get("pk")
+        context["object"] = CustomUser.objects.get(pk=pk)
         return context
