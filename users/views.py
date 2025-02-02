@@ -18,6 +18,7 @@ class CustomUserListView(LoginRequiredMixin, ListView):
 class CustomUserUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = CustomUserModeratorForm
+    success_url = reverse_lazy("users:user_list")
 
     def get_form_class(self):
         if self.request.user.pk == self.object.pk:

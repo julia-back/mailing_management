@@ -19,4 +19,4 @@ class CustomUserModeratorForm(ModelForm):
 class CustomUserForm(ModelForm):
     class Meta:
         model = CustomUser
-        fields = ["username", "first_name", "last_name"]
+        fields = ["username", "first_name", "last_name", "avatar", "phone_number", "country"]
