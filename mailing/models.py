@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import CustomUser
 
 
 class Recipient(models.Model):
@@ -18,6 +19,7 @@ class Recipient(models.Model):
     comment = models.TextField(null=True, blank=True,
                                verbose_name="Комментарий",
                                help_text="Введите комментарий (необязательно)")
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -35,6 +37,7 @@ class Message(models.Model):
                                        help_text="Введите тему письма.")
     message_body = models.TextField(verbose_name="Текст письма",
                                     help_text="Введите текст письма.")
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.message_subject
@@ -61,6 +64,7 @@ class Mailing(models.Model):
     message = models.ForeignKey(Message, on_delete=models.SET_NULL, null=True,
                                 related_name="messages")
     recipient = models.ManyToManyField(Recipient, related_name="recipients")
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -80,3 +84,4 @@ class SendingAttempt(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_ATTEMPT_CHOICES)
     mail_server_response = models.TextField(null=True, blank=True)
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE)
+    owner = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)

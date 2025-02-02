@@ -17,7 +17,6 @@ def start_send_mailing(pk):
     email_list = []
     for recipient in recipient_queryset:
         email_list.append(recipient.email)
-
     try:
         send_mail(subject=message_subject, message=message_body, recipient_list=email_list, fail_silently=False,
                   from_email=os.getenv("EMAIL_HOST_USER"))
@@ -27,6 +26,5 @@ def start_send_mailing(pk):
     else:
         sending_attempt_success = SendingAttempt(status="success", mail_server_response=None, mailing=mailing)
         sending_attempt_success.save()
-
     mailing.status = "processing"
     mailing.save()

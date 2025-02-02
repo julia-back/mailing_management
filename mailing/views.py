@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from .models import Recipient, Message, Mailing, SendingAttempt
@@ -6,105 +8,145 @@ from .forms import RecipientForm, MessageForm, MailingForm
 from .services import start_send_mailing
 
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "mailing/home.html"
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context["success_attempt"] = SendingAttempt.objects.filter(status="success").count()
-        context["fail_attempt"] = SendingAttempt.objects.filter(status="fail").count()
-        context["all_attempt"] = SendingAttempt.objects.count()
+        context["success_attempt"] = SendingAttempt.objects.filter(status="success", owner=request.user).count()
+        context["fail_attempt"] = SendingAttempt.objects.filter(status="fail", owner=request.user).count()
+        context["all_attempt"] = SendingAttempt.objects.filter(owner=request.user).count()
 
-        context["all_mailing"] = Mailing.objects.count()
-        context["processing_mailing"] = Mailing.objects.filter(status="processing").count()
-        context["all_recipient"] = Recipient.objects.values("email").distinct().count()
-
+        context["all_mailing"] = Mailing.objects.filter(owner=request.user).count()
+        context["processing_mailing"] = Mailing.objects.filter(status="processing", owner=request.user).count()
+        context["all_recipient"] = Recipient.objects.values("email").filter(owner=request.user).distinct().count()
         return self.render_to_response(context)
 
 
-class SendingAttemptListView(ListView):
+class SendingAttemptListView(LoginRequiredMixin, ListView):
     model = SendingAttempt
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.has_perm("view_sending_attempt"):
+            return queryset
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset
 
-class RecipientListView(ListView):
+
+class RecipientListView(LoginRequiredMixin, ListView):
+    model = Recipient
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.has_perm("view_recipient"):
+            return queryset
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset
+
+
+class RecipientDetailView(LoginRequiredMixin, DetailView):
     model = Recipient
 
 
-class RecipientDetailView(DetailView):
+class RecipientCreateView(LoginRequiredMixin, CreateView):
     model = Recipient
+    success_url = reverse_lazy("mailing:recipient_list")
+    form_class = RecipientForm
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
-class RecipientCreateView(CreateView):
+class RecipientUpdateView(LoginRequiredMixin, UpdateView):
     model = Recipient
     success_url = reverse_lazy("mailing:recipient_list")
     form_class = RecipientForm
 
 
-class RecipientUpdateView(UpdateView):
-    model = Recipient
-    success_url = reverse_lazy("mailing:recipient_list")
-    form_class = RecipientForm
-
-
-class RecipientDeleteView(DeleteView):
+class RecipientDeleteView(LoginRequiredMixin, DeleteView):
     model = Recipient
     success_url = reverse_lazy("mailing:recipient_list")
     template_name = "mailing/confirm_delete.html"
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
+    model = Message
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.has_perm("view_message"):
+            return queryset
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset
+
+
+class MessageDetailView(LoginRequiredMixin, DetailView):
     model = Message
 
 
-class MessageDetailView(DetailView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
+    success_url = reverse_lazy("mailing:message_list")
+    form_class = MessageForm
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
-class MessageCreateView(CreateView):
+class MessageUpdateView(LoginRequiredMixin, UpdateView):
     model = Message
     success_url = reverse_lazy("mailing:message_list")
     form_class = MessageForm
 
 
-class MessageUpdateView(UpdateView):
-    model = Message
-    success_url = reverse_lazy("mailing:message_list")
-    form_class = MessageForm
-
-
-class MessageDeleteView(DeleteView):
+class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
     success_url = reverse_lazy("mailing:message_list")
     template_name = "mailing/confirm_delete.html"
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
+    model = Mailing
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.user.has_perm("view_mailing"):
+            return queryset
+        else:
+            queryset = queryset.filter(owner=self.request.user)
+            return queryset
+
+
+class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
 
 
-class MailingDetailView(DetailView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
+    success_url = reverse_lazy("mailing:mailing_list")
+    form_class = MailingForm
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
-class MailingCreateView(CreateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     success_url = reverse_lazy("mailing:mailing_list")
     form_class = MailingForm
 
 
-class MailingUpdateView(UpdateView):
-    model = Mailing
-    success_url = reverse_lazy("mailing:mailing_list")
-    form_class = MailingForm
-
-
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy("mailing:mailing_list")
     template_name = "mailing/confirm_delete.html"
 
 
-class MailingStartView(View):
+class MailingStartView(LoginRequiredMixin, View):
 
     def get(self, request, pk):
         return render(request, "mailing/mailing_start.html")

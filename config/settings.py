@@ -102,5 +102,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 AUTH_USER_MODEL = 'users.CustomUser'
+LOGIN_URL = "users:login"
 LOGIN_REDIRECT_URL = "mailing:home"
 LOGOUT_REDIRECT_URL = "users:login"
