@@ -50,9 +50,9 @@ class Message(models.Model):
 
 class Mailing(models.Model):
 
-    STATUS_MAILING_CHOICES = {"created": "Создана",
-                              "processing": "Запущена",
-                              "completed": "Завершена"}
+    STATUS_MAILING_CHOICES = [("created", "Создана"),
+                              ("processing", "Запущена"),
+                              ("completed", "Завершена"),]
 
     name = models.CharField(max_length=100,
                             verbose_name="Название рассылки",
@@ -78,8 +78,8 @@ class Mailing(models.Model):
 
 class SendingAttempt(models.Model):
 
-    STATUS_ATTEMPT_CHOICES = {"success": "Успешно",
-                              "fail": "Не успешно"}
+    STATUS_ATTEMPT_CHOICES = [("success", "Успешно"),
+                              ("fail", "Не успешно"),]
 
     date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_ATTEMPT_CHOICES)

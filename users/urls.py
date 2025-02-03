@@ -1,11 +1,8 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.decorators.cache import cache_page
-
 from .views import RegisterView, CustomUserListView, CustomUserUpdateView, ProfileView
 from .apps import UsersConfig
-from django.conf import settings
-from django.conf.urls.static import static
 
 
 app_name = UsersConfig.name
@@ -20,7 +17,3 @@ urlpatterns = [
 
     path("profile/<int:pk>/", ProfileView.as_view(), name="profile"),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
