@@ -1,5 +1,5 @@
 import smtplib
-
+from django.db import models
 from .models import Mailing, SendingAttempt
 from django.core.mail import send_mail
 import os
@@ -28,3 +28,14 @@ def start_send_mailing(pk):
         sending_attempt_success.save()
     mailing.status = "processing"
     mailing.save()
+
+
+class StyleFormMixin:
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field, value in self.fields.items():
+            if isinstance(value, models.BooleanField):
+                value.widget.attrs.update({"class": "form-check"})
+            else:
+                value.widget.attrs.update({"class": "form-control"})
