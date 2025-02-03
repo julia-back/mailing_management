@@ -6,20 +6,44 @@ from .models import Recipient, Message, Mailing, SendingAttempt
 from django.urls import reverse_lazy
 from .forms import RecipientForm, MessageForm, MailingForm, MailingModeratorForm
 from .services import start_send_mailing
+from config.settings import CACHE_ENABLED
+from django.core.cache import cache
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "mailing/home.html"
 
     def get(self, request, *args, **kwargs):
+        if CACHE_ENABLED:
+            queryset = cache.get("sending_attempt_list_queryset")
+            if not queryset:
+                queryset = SendingAttempt.objects.all()
+                cache.set("sending_attempt_list_queryset", queryset, 60)
+        else:
+            queryset = SendingAttempt.objects.all()
         context = self.get_context_data(**kwargs)
-        context["success_attempt"] = SendingAttempt.objects.filter(status="success", owner=request.user).count()
-        context["fail_attempt"] = SendingAttempt.objects.filter(status="fail", owner=request.user).count()
-        context["all_attempt"] = SendingAttempt.objects.filter(owner=request.user).count()
+        context["success_attempt"] = queryset.filter(status="success", owner=request.user).count()
+        context["fail_attempt"] = queryset.filter(status="fail", owner=request.user).count()
+        context["all_attempt"] = queryset.filter(owner=request.user).count()
 
-        context["all_mailing"] = Mailing.objects.filter(owner=request.user).count()
-        context["processing_mailing"] = Mailing.objects.filter(status="processing", owner=request.user).count()
-        context["all_recipient"] = Recipient.objects.values("email").filter(owner=request.user).distinct().count()
+        if CACHE_ENABLED:
+            queryset = cache.get("mailing_list_queryset")
+            if not queryset:
+                queryset = Mailing.objects.all()
+                cache.set("mailing_list_queryset", queryset, 60)
+        else:
+            queryset = Mailing.objects.all()
+        context["all_mailing"] = queryset.filter(owner=request.user).count()
+        context["processing_mailing"] = queryset.filter(status="processing", owner=request.user).count()
+
+        if CACHE_ENABLED:
+            queryset = cache.get("recipient_list_queryset")
+            if not queryset:
+                queryset = Recipient.objects.all()
+                cache.set("recipient_list_queryset", queryset, 60)
+        else:
+            queryset = Recipient.objects.all()
+        context["all_recipient"] = queryset.values("email").filter(owner=request.user).distinct().count()
         return self.render_to_response(context)
 
 
@@ -27,7 +51,13 @@ class SendingAttemptListView(LoginRequiredMixin, ListView):
     model = SendingAttempt
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        if CACHE_ENABLED:
+            queryset = cache.get("sending_attempt_list_queryset")
+            if not queryset:
+                queryset = super().get_queryset()
+                cache.set("sending_attempt_list_queryset", queryset, 60)
+        else:
+            queryset = super().get_queryset()
         if self.request.user.has_perm("view_sending_attempt"):
             return queryset
         queryset = queryset.filter(owner=self.request.user)
@@ -38,7 +68,13 @@ class RecipientListView(LoginRequiredMixin, ListView):
     model = Recipient
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        if CACHE_ENABLED:
+            queryset = cache.get("recipient_list_queryset")
+            if not queryset:
+                queryset = super().get_queryset()
+                cache.set("recipient_list_queryset", queryset, 60 * 15)
+        else:
+            queryset = super().get_queryset()
         if self.request.user.has_perm("view_recipient"):
             return queryset
         queryset = queryset.filter(owner=self.request.user)
@@ -75,7 +111,13 @@ class MessageListView(LoginRequiredMixin, ListView):
     model = Message
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        if CACHE_ENABLED:
+            queryset = cache.get("message_list_queryset")
+            if not queryset:
+                queryset = super().get_queryset()
+                cache.set("message_list_queryset", queryset, 60 * 15)
+        else:
+            queryset = super().get_queryset()
         if self.request.user.has_perm("view_message"):
             return queryset
         queryset = queryset.filter(owner=self.request.user)
@@ -112,7 +154,13 @@ class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        if CACHE_ENABLED:
+            queryset = cache.get("mailing_list_queryset")
+            if not queryset:
+                queryset = super().get_queryset()
+                cache.set("mailing_list_queryset", queryset, 60 * 15)
+        else:
+            queryset = super().get_queryset()
         if self.request.user.has_perm("view_mailing"):
             return queryset
         else:

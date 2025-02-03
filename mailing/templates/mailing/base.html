@@ -20,10 +20,10 @@
                 <div>
                     {% if user.is_authenticated %}
                     <form method="post" action="{% url 'users:logout' %}"
-                              style="display: inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link">Выйти</button>
-                        </form>
+                          style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                    </form>
                     <a class="nav-link" href="{% url 'users:profile' user.pk %}">Профиль</a>
                     {% else %}
                     <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
@@ -33,6 +33,12 @@
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                     <a class="navbar-brand" href="{% url 'mailing:home' %}">Главная</a>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if perms.users.can_block_user %}
+                        <li class="nav-item"><a class="nav-link text-danger" href="{% url 'users:user_list' %}">Пользователи
+                            сервиса</a>
+                        </li>
+                        {% endif %}
+                        {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'mailing:mailing_list' %}">Рассылки</a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'mailing:message_list' %}">Сообщения</a>
@@ -42,8 +48,7 @@
                         <li class="nav-item"><a class="nav-link"
                                                 href="{% url 'mailing:sending_attempt_list' %}">Попытки
                             расылок</a></li>
-
-                        <li class="nav-item"><a class="nav-link text-danger" href="{% url 'users:user_list' %}">Пользователи сервиса</a>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
