@@ -9,4 +9,5 @@
     {{ form.as_p }}
     <button type="submit">Войти</button>
   </form>
+<a href="{% url 'users:password_reset' %}" class="btn">Восстановление пароля</a>
 {% endblock %}
