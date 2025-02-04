@@ -7,6 +7,7 @@ from .forms import RecipientForm, MessageForm, MailingForm, MailingModeratorForm
 from .services import start_send_mailing
 from config.settings import CACHE_ENABLED
 from django.core.cache import cache
+import datetime
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
@@ -206,4 +207,18 @@ class MailingStartView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         start_send_mailing(pk=pk)
+        return redirect("mailing:mailing_list")
+
+
+class MailingStopView(LoginRequiredMixin, View):
+
+    def get(self, request, pk):
+        return render(request, "mailing/mailing_stop.html")
+
+    def post(self, request, pk):
+        mailing = Mailing.objects.get(pk=pk)
+        if mailing.status != "completed":
+            mailing.status = "completed"
+            mailing.stop_send = datetime.datetime.now()
+            mailing.save()
         return redirect("mailing:mailing_list")
