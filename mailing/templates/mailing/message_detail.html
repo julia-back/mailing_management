@@ -1,0 +1,42 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Детали сообщения{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col m-2">
+        <h1>Детали сообщения</h1>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Тема сообщения: </td>
+                <td>{{ object.message_subject }}</td>
+            </tr>
+            <tr>
+                <td>Тело сообщения:</td>
+                <td>{{ object.message_body }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div class="row">
+    <div class="col-6"></div>
+    <div class="col-2">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a href="{% url 'mailing:message_update' object.pk %}" class="btn btn-secondary" type="button">Редактировать</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a href="{% url 'mailing:message_delete' object.pk %}" class="btn btn-danger" type="button">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

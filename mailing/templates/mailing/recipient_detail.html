@@ -1,0 +1,58 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Детали получателя{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col m-2">
+        <h1>Детали получателя</h1>
+        <table class="table">
+            <tbody>
+            <tr>
+                <td>Фамилия:</td>
+                <td>{{ object.last_name }}</td>
+            </tr>
+            <tr>
+                <td>Имя:</td>
+                <td>{{ object.first_name }}</td>
+            </tr>
+            <tr>
+                <td>Отчество:</td>
+                {% if object.patronymic %}
+                <td>{{ object.patronymic }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>{{ object.email }}</td>
+            </tr>
+            <tr>
+                <td>Комментарий:</td>
+                <td>{{ object.comment }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div class="row">
+    <div class="col-6"></div>
+    <div class="col-2">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a href="{% url 'mailing:recipient_update' object.pk %}" class="btn btn-secondary" type="button">Редактировать</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="col">
+            <div class="d-grid gap-2">
+                <a href="{% url 'mailing:recipient_delete' object.pk %}" class="btn btn-danger" type="button">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

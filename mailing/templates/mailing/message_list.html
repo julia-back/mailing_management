@@ -1,0 +1,26 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<h1>Сообщения</h1>
+<div class="row">
+    <div class="col">
+        <a href="{% url 'mailing:message_create' %}" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover p-1">Добавить сообщение</a>
+        <table class="table">
+            <tbody>
+            {% for message in object_list %}
+            <tr>
+                <th scope="row">{{ message.pk }}</th>
+                <td>{{ message.message_subject | truncatechars:100 }}</td>
+                <td>{{ message.message_body | truncatechars:100 }}</td>
+                <td>
+                    <a href="{% url 'mailing:message_detail' message.pk %}" class="btn btn-light">Посмотреть</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

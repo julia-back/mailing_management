@@ -1,0 +1,33 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Получатели рассылки{% endblock %}
+
+{% block content %}
+<h1>Получатели рассылки</h1>
+<div class="row">
+    <div class="col">
+        <a href="{% url 'mailing:recipient_create' %}" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover p-1">Добавить получателя</a>
+        <table class="table">
+            <tbody>
+            {% for recipient in object_list %}
+            <tr>
+                <th scope="row">{{ recipient.pk }}</th>
+                <td>{{ recipient.last_name }}</td>
+                <td>{{ recipient.first_name }}</td>
+                {% if recipient.patronymic %}
+                <td>{{ recipient.patronymic }}</td>
+                {% else %}
+                <td> -</td>
+                {% endif %}
+                <td>{{ recipient.email }}</td>
+                <td>{{ recipient.comment | truncatechars:100 }}</td>
+                <td>
+                    <a href="{% url 'mailing:recipient_detail' recipient.pk %}" class="btn btn-light">Посмотреть</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
