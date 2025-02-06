@@ -2,7 +2,8 @@ from django.urls import path, reverse_lazy
 from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView, PasswordResetDoneView,
                                        PasswordResetConfirmView, PasswordResetCompleteView)
 from django.views.decorators.cache import cache_page
-from .views import RegisterView, CustomUserListView, CustomUserUpdateView, ProfileView
+from .views import (RegisterView, CustomUserListView, CustomUserUpdateView, ProfileView, ConfirmEmailView,
+                    EmailConfirmationSentView)
 from .apps import UsersConfig
 
 app_name = UsersConfig.name
@@ -40,4 +41,7 @@ urlpatterns = [
              template_name="password_reset/password_reset_complete.html"),
          name="password_reset_complete"
          ),
+
+    path("email_confirmation_sent/", EmailConfirmationSentView.as_view(), name="email_confirmation_sent"),
+    path("confirm_email/<uemailb64>/<token>/", ConfirmEmailView.as_view(), name="confirm_email"),
 ]
