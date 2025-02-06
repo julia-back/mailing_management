@@ -1,13 +1,13 @@
 from django.urls import path
 from django.views.decorators.cache import cache_page
 
-from .apps import MailingConfig
 from . import views
+from .apps import MailingConfig
 
 app_name = MailingConfig.name
 
 urlpatterns = [
-    path("home/", cache_page(60*15)(views.HomeView.as_view()), name="home"),
+    path("home/", cache_page(60 * 15)(views.HomeView.as_view()), name="home"),
     path("sending_attempt_list/", views.SendingAttemptListView.as_view(), name="sending_attempt_list"),
 
     path("recipient_list/", cache_page(60)(views.RecipientListView.as_view()), name="recipient_list"),

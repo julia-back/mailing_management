@@ -1,11 +1,12 @@
-import smtplib
-from django.db import models
-from .models import Mailing, SendingAttempt
-from django.core.mail import send_mail
-import os
-from dotenv import load_dotenv
 import datetime
+import os
+import smtplib
 
+from django.core.mail import send_mail
+from django.db import models
+from dotenv import load_dotenv
+
+from .models import Mailing, SendingAttempt
 
 load_dotenv()
 

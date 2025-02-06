@@ -8,7 +8,7 @@ from .forms import RegisterForm, CustomUserModeratorForm, CustomUserForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import CustomUser
-from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator
+from django.contrib.auth.tokens import default_token_generator
 import os
 
 

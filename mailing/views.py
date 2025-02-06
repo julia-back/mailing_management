@@ -1,13 +1,16 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, View
-from .models import Recipient, Message, Mailing, SendingAttempt
-from django.urls import reverse_lazy
-from .forms import RecipientForm, MessageForm, MailingForm, MailingModeratorForm
-from .services import start_send_mailing
-from config.settings import CACHE_ENABLED
-from django.core.cache import cache
 import datetime
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView, View
+
+from config.settings import CACHE_ENABLED
+
+from .forms import MailingForm, MailingModeratorForm, MessageForm, RecipientForm
+from .models import Mailing, Message, Recipient, SendingAttempt
+from .services import start_send_mailing
 
 
 class HomeView(LoginRequiredMixin, TemplateView):

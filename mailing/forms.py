@@ -1,5 +1,6 @@
 from django.forms import ModelForm
-from .models import Recipient, Message, Mailing
+
+from .models import Mailing, Message, Recipient
 from .services import StyleFormMixin
 
 
