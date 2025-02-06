@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import CreateView, ListView, UpdateView, TemplateView, View
 from .forms import RegisterForm, CustomUserModeratorForm, CustomUserForm
@@ -19,7 +19,7 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         # отправка ссылки подтверждения
         user = form.save()
-        email = form.cleaned_data.get("email")
+        email = user.email
         token = default_token_generator.make_token(user)
         uemail = urlsafe_base64_encode(force_bytes(email))
         activation_url = reverse_lazy('users:confirm_email', kwargs={'uemailb64': uemail, 'token': token})
@@ -44,12 +44,12 @@ class ConfirmEmailView(View):
 
     def get(self, request, uemailb64, token):
         uemail = urlsafe_base64_decode(uemailb64)
-        user = CustomUser.objects.get(email=uemail)
+        user = CustomUser.objects.get(email=force_str(uemail))
         if default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
             login(request, user)
-            return render(request, "users/email_confirmation_done.html")
+            return render(request, "email_confirm/email_confirmation_done.html")
 
 
 class CustomUserListView(LoginRequiredMixin, ListView):
