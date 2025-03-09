@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<div class="row">
+    <div class="col">
+        <nav class="navbar sticky-top bg-body-tertiary">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'users:logout' %}"
+                          style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                    </form>
+                    <a class="nav-link" href="{% url 'users:profile' user.pk %}">Профиль</a>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
+                    <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                    <a class="navbar-brand" href="{% url 'mailing:home' %}">Главная</a>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if perms.users.can_block_user %}
+                        <li class="nav-item"><a class="nav-link text-danger" href="{% url 'users:user_list' %}">Пользователи
+                            сервиса</a>
+                        </li>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:mailing_list' %}">Рассылки</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'mailing:message_list' %}">Сообщения</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="{% url 'mailing:recipient_list' %}">Получатели</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                                href="{% url 'mailing:sending_attempt_list' %}">Попытки
+                            расылок</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
