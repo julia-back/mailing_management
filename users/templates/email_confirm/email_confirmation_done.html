@@ -1,0 +1,9 @@
+{% extends 'mailing/base.html' %}
+
+{% block title %}Email подтвержден{% endblock %}
+
+{% block content %}
+<h1>Email подтвержден</h1>
+<p >Поздравляем! Вы успешно подтвердили свой email и Ваш аккаунт активирован. Используйте
+    его для  <a href="{% url 'users:login' %}">входа в систему</a>.</p>
+{% endblock %}
